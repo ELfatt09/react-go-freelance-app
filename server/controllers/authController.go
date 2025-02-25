@@ -4,13 +4,10 @@ import (
 	"net/http"
 	"strings"
 
-	"react-go-chatapp/initializers"
-	"react-go-chatapp/models"
 	"react-go-chatapp/services"
 	"react-go-chatapp/utils"
 
 	"github.com/gin-gonic/gin"
-	"golang.org/x/crypto/bcrypt"
 )
 
 func Register(c *gin.Context) {
@@ -39,19 +36,6 @@ func Register(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Registered successfully", "user": user})
 }
 
-func RegisterService(email, password, username string) (models.User, error) {
-	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
-	if err != nil {
-		return models.User{}, err
-	}
-
-	user := models.User{Email: email, Password: string(hash), Username: username}
-	if err := initializers.DB.Create(&user).Error; err != nil {
-		return models.User{}, err
-	}
-
-	return user, nil
-}
 
 func LogIn(c *gin.Context) {
 	var body struct {
@@ -77,7 +61,7 @@ func LogIn(c *gin.Context) {
 }
 
 func GetAuthenticatedUserData(c *gin.Context) {
-	tokenString := strings.TrimPrefix(c.GetHeader("Authorization"), "Bearer ")
+	tokenString := c.GetHeader("Authorization")
 	if tokenString == "bearer " {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Token empty"})
 		return
