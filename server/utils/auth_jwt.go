@@ -1,8 +1,8 @@
 package utils
 
 import (
+	"go-freelance-app/models"
 	"os"
-	"react-go-chatapp/models"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -30,8 +30,8 @@ func ParseToken(tokenString string) (jwt.MapClaims, error) {
 
 func CreateToken(user models.User) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"iss":      "react-go-chatapp",
-		"aud":      "react-go-chatapp",
+		"iss":      "go-freelance-app",
+		"aud":      "go-freelance-app",
 		"iat":      time.Now().Unix(),
 		"exp":      time.Now().Add(time.Hour * 72).Unix(),
 		"sub":      user.ID,

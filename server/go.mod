@@ -1,4 +1,4 @@
-module react-go-chatapp
+module go-freelance-app
 
 go 1.23.2
 

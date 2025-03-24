@@ -4,8 +4,8 @@ import (
 	"net/http"
 	"strings"
 
-	"react-go-chatapp/services"
-	"react-go-chatapp/utils"
+	"go-freelance-app/services"
+	"go-freelance-app/utils"
 
 	"github.com/gin-gonic/gin"
 )
@@ -35,7 +35,6 @@ func Register(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"message": "Registered successfully", "user": user})
 }
-
 
 func LogIn(c *gin.Context) {
 	var body struct {
@@ -87,4 +86,35 @@ func Verify(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"auth": false})
+}
+
+func EditUserInfo(c *gin.Context) {
+	var body struct {
+		Username string
+		Bio      string
+		PfpPath  string
+	}
+
+	if err := c.Bind(&body); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid parameters"})
+		return
+	}
+
+	tokenString := strings.TrimPrefix(c.GetHeader("Authorization"), "Bearer ")
+	if tokenString == "" {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Token empty"})
+		return
+	}
+
+	user, err := services.EditUserInfoService(tokenString, body.Username, body.Bio, body.PfpPath)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"username": user.Username,
+		"pfpPath":  user.PfpPath,
+		"bio":      user.Bio,
+	})
 }

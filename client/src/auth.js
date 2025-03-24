@@ -15,7 +15,7 @@ export function logout(){
     
 }
 
-export function getAuthencatedUser(){
+export function getAuthenticatedUser(){
     return axios.get('http://localhost:8080/auth/data', {headers: {'Authorization': 'Bearer ' + getToken()}})
         .then(res => {
             if (res.status === 200) {

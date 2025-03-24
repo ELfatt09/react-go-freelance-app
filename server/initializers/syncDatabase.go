@@ -1,6 +1,6 @@
 package initializers
 
-import "react-go-chatapp/models"
+import "go-freelance-app/models"
 
 func SyncDatabase() {
 	DB.AutoMigrate(&models.User{})

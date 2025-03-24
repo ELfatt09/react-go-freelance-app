@@ -1,12 +1,12 @@
 import {useEffect, useState} from 'react'
-import { isAuthenticated, getAuthencatedUser } from '../auth'
+import { isAuthenticated, getAuthenticatedUser } from '../auth'
 
 function Home() {
   const [user, setUser] = useState(null)
   const [auth, setAuth] = useState(false)
   useEffect(() => {
     if (isAuthenticated()) {
-      getAuthencatedUser().then(u => setUser(u))
+      getAuthenticatedUser().then(u => setUser(u))
       setAuth(true)
     } else {
       setAuth(false)

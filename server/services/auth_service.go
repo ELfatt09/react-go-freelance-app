@@ -2,9 +2,9 @@ package services
 
 import (
 	"errors"
-	"react-go-chatapp/initializers"
-	"react-go-chatapp/models"
-	"react-go-chatapp/utils"
+	"go-freelance-app/initializers"
+	"go-freelance-app/models"
+	"go-freelance-app/utils"
 	"strings"
 
 	"golang.org/x/crypto/bcrypt"
@@ -28,11 +28,11 @@ func LogInService(email, password string) (string, error) {
 	var user models.User
 	initializers.DB.First(&user, "email = ?", email)
 	if user.ID == 0 {
-		return "", errors.New("User not found")
+		return "", errors.New("user not found")
 	}
 
 	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password)); err != nil {
-		return "", errors.New("Invalid password")
+		return "", errors.New("invalid password")
 	}
 
 	tokenString, err := utils.CreateToken(user)
@@ -57,3 +57,22 @@ func GetAuthenticatedUserDataService(authorizationHeader string) (models.User, e
 	return user, nil
 }
 
+func EditUserInfoService(tokenString, username, bio, pfpPath string) (models.User, error) {
+	claim, err := utils.ParseToken(tokenString)
+	if err != nil {
+		return models.User{}, errors.New("token not valid")
+	}
+
+	var user models.User
+	initializers.DB.First(&user, "id = ?", claim["sub"])
+
+	user.Username = username
+	user.Bio = bio
+	user.PfpPath = pfpPath
+
+	if err := initializers.DB.Save(&user).Error; err != nil {
+		return models.User{}, err
+	}
+
+	return user, nil
+}

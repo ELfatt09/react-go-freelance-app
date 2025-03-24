@@ -30,7 +30,7 @@ function Login() {
       })
       .catch((err) => {
         console.error(err)
-        setError('Login failed')
+        setError(err.response.data.error)
       })
   }
 

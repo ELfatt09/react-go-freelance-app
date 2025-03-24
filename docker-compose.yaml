@@ -1,0 +1,49 @@
+services:
+  backend:
+    build:
+      context: ./server
+    ports:
+      - "8080:8080"
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    networks:
+      - app-network
+    env_file:
+      - server/.env
+    environment:
+      - DB_HOST=mariadb
+
+  # React Frontend
+  frontend:
+    build:
+      context: ./client # Replace with the path to your React code
+    ports:
+      - "80:80"
+    networks:
+      - app-network
+
+  # MariaDB
+  mariadb:
+    image: mariadb:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: fata8712
+      MYSQL_DATABASE: freelance_app
+    volumes:
+      - mariadb-data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "--host=localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mariadb-data:
