@@ -76,3 +76,17 @@ func EditUserInfoService(tokenString, username, bio, pfpPath string) (models.Use
 
 	return user, nil
 }
+
+func VerifyAuthTokenService(tokenString string) (bool, error) {
+	claim, err := utils.ParseToken(tokenString)
+
+	if err != nil {
+		return false, errors.New("token not valid")
+	}
+
+	if utils.IsTokenExpired(claim) {
+		return false, errors.New("token expired")
+	}
+
+	return true, nil
+}

@@ -33,11 +33,16 @@ func CreateToken(user models.User) (string, error) {
 		"iss":      "go-freelance-app",
 		"aud":      "go-freelance-app",
 		"iat":      time.Now().Unix(),
-		"exp":      time.Now().Add(time.Hour * 72).Unix(),
+		"exp":      time.Now().AddDate(0, 0, 7).Unix(),
 		"sub":      user.ID,
 		"email":    user.Email,
 		"username": user.Username,
 	})
 
 	return token.SignedString([]byte(os.Getenv("SECRET_KEY")))
+}
+
+func IsTokenExpired(claims jwt.MapClaims) bool {
+	exp := claims["exp"].(float64)
+	return time.Unix(int64(exp), 0).Before(time.Now())
 }

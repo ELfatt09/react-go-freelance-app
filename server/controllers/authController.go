@@ -81,11 +81,17 @@ func GetAuthenticatedUserData(c *gin.Context) {
 }
 func Verify(c *gin.Context) {
 	tokenString := strings.TrimPrefix(c.GetHeader("Authorization"), "Bearer ")
-	if tokenString != "" {
-		c.JSON(http.StatusOK, gin.H{"auth": true})
+	if tokenString == "" {
+		c.JSON(http.StatusUnauthorized, gin.H{"auth": false})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"auth": false})
+
+	if _, err := services.VerifyAuthTokenService(tokenString); err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"auth": false})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"auth": true})
 }
 
 func EditUserInfo(c *gin.Context) {
