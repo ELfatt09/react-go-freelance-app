@@ -1,50 +1,16 @@
 import { useState } from 'react'
-import axios from 'axios'
-import { validateEmail, validatePassword, validateUsername } from '../../utils/validation'
-
+import { useAuth } from '../../authContext'
 function Register() {
+  const { register, error } = useAuth();
+
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [username, setUsername] = useState('')
-  const [error, setError] = useState(null)
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    if (!validateEmail(email)) {
-      setError('Invalid email')
-      return
-    }
-    if (!validatePassword(password)) {
-      setError('Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, and one number')
-      return
-    }
-    if (password !== confirmPassword) {
-      setError('Passwords do not match')
-      return
-    }
-    if (!validateUsername(username)) {
-      setError('Username must be at least 3 characters long and contain only letters, numbers, and underscores')
-      return
-    }
-
-    axios.post('http://localhost:8080/auth/register', {
-      "Email": email,
-      "Password": password,
-      "Username": username,
-    }, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-      .then((res) => {
-        console.log(res.data)
-        alert('Registration successful')
-      })
-      .catch((err) => {
-        console.error(err)
-        setError('Registration failed')
-      })
+    register(email, password, confirmPassword, username)
   }
 
 

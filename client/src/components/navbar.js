@@ -1,19 +1,11 @@
 import { useState, useEffect } from 'react'
-import { logout, isAuthenticated, getAuthenticatedUser } from '../auth'
+import { useAuth } from '../authContext'
 import { NavLink } from 'react-router-dom'
 
 export default function Navbar() {
-  const [auth, setAuth] = useState(false)
+  const { logout, user, auth } = useAuth()
+
   const [openMenu, setOpenMenu] = useState(false)
-  const [user, setUser] = useState(null)
-  useEffect(() => {
-    if (isAuthenticated()) {
-      getAuthenticatedUser().then(u => setUser(u))
-      setAuth(true)
-    } else {
-      setAuth(false)
-    }
-  }, [])
 
   return (
     <nav class="bg-white border-gray-200 dark:bg-gray-900 whitespace-nowrap ">

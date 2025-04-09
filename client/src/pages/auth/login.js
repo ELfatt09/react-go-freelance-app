@@ -1,37 +1,15 @@
 import { useState } from 'react'
-import { validateEmail, validatePassword, validateUsername } from '../../utils/validation'
-import axios from 'axios'
+import { useAuth } from '../../authContext'
+import { validateEmail } from '../../utils/validation'
 
 function Login() {
+  const { login, error } = useAuth()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [error, setError] = useState(null)
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    if (!validateEmail(email)) {
-      setError('Invalid email')
-      return
-    }
-
-    axios.post('http://localhost:8080/auth/login', {
-      "Email" : email,
-      "Password" : password,
-    }, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-      .then((res) => {
-        console.log(res.data)
-        alert('Login successful')
-        localStorage.setItem('token', res.data.token)
-        window.history.back();
-      })
-      .catch((err) => {
-        console.error(err)
-        setError(err.response.data.error)
-      })
+    login(email, password)
   }
 
   return (
