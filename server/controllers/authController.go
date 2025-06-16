@@ -96,7 +96,6 @@ func IsValid(c *gin.Context) {
 func EditUserInfo(c *gin.Context) {
 	var body struct {
 		models.UserPersonalInfo
-		models.User
 	}
 
 	if err := c.Bind(&body); err != nil {
@@ -110,7 +109,7 @@ func EditUserInfo(c *gin.Context) {
 		return
 	}
 
-	user, err := services.EditUserInfoService(tokenString, body.Fullname, body.Address, body.Phone, body.Gender, body.Description, body.PfpPath, body.JobID)
+	user, err := services.EditUserInfoService(tokenString, body.Fullname, body.SubTitle, body.Address, body.Phone, body.Gender, body.Description)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

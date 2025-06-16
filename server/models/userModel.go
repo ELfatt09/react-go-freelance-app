@@ -12,16 +12,15 @@ type User struct {
 	Password   string
 	VerifiedAt *time.Time
 
-	JobID      *uint      `gorm:"column:job_id"`
-	Job        Job        `gorm:"foreignKey:JobID;constraint:OnDelete:CASCADE,OnUpdate:CASCADE"`
-	
-	PersonalInfoID uint
 	PersonalInfo UserPersonalInfo `gorm:"foreignKey:UserID;references:ID;constraint:OnDelete:CASCADE;constraint:OnUpdate:CASCADE;"`
+
+	Cvs []Cv `gorm:"foreignKey:UserID;references:ID;constraint:OnDelete:CASCADE;constraint:OnUpdate:CASCADE;"`
 }
 
 type UserPersonalInfo struct {
 	gorm.Model
 	Fullname string
+	SubTitle string
 	Phone string
 	Address string
 	Gender string `gorm:"type:enum('male', 'female', '');default:null"`

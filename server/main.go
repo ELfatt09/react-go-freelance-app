@@ -26,10 +26,9 @@ func main() {
 	r.Static("/storage", "./storage")
 
 	auth := r.Group("/auth/")
-	jobs := r.Group("/jobs/")
+	category := r.Group("/category/")
 	profile := r.Group("/profile/")
 	services := r.Group("/services/")
-
 
 	auth.POST("/register", controllers.Register)
 	auth.POST("/login", controllers.LogIn)
@@ -47,7 +46,7 @@ func main() {
 	services.POST("/create", middlewares.RequireAuth, middlewares.RequireVerification, controllers.CreateService)
 	services.GET("/all", controllers.GetAllServices)
 
-	jobs.GET("/", controllers.GetAllJobs)
+	category.GET("/", controllers.GetAllCategories)
 
 	r.Run()
 }

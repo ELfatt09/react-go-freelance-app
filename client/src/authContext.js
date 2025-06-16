@@ -200,13 +200,13 @@ const isAuthenticated = async () => {
     }
   };
 
-  const edit = (fullname, description, pfpPath, JobID, address, phone, gender) => {
+  const edit = (fullname, subTitle, description, pfpPath, address, phone, gender) => {
     const token = localStorage.getItem('token');
     const res = axios.put('http://localhost:8080/profile/edit', {
       "Fullname": fullname,
+      "SubTitle": subTitle,
       "Description": description,
       "PfpPath": pfpPath,
-      "JobID": JobID,
       "Address": address,
       "Phone": phone,
       "Gender": gender

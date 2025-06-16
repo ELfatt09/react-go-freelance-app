@@ -4,7 +4,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type Job struct {
+type Category struct {
 	gorm.Model
 	Name string
 }

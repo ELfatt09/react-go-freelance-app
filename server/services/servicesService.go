@@ -9,7 +9,7 @@ import (
 
 func GetAllServicesService() ([]models.Service, error) {
 	var services []models.Service
-	err := initializers.DB.Preload("User.Job").Find(&services).Error
+	err := initializers.DB.Find(&services).Error
 	return services, err
 }
 

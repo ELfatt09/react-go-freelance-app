@@ -19,15 +19,15 @@ export default function Navbar() {
               <div className="relative">
                 <button
                   type="button"
-                  className="flex items-center text-sm bg-accent rounded-full p-1"
+                  className="flex items-center text-sm bg-accent rounded-full"
                   id="user-menu-button"
                   aria-expanded={openMenu}
                   onClick={() => setOpenMenu(!openMenu)}
                 >
                   <span className="sr-only">Open user menu</span>
                   <img
-                    className="w-8 h-8 rounded-full"
-                    src={`http://localhost:8080${user?.PersonalInfo.pfpPath}`}
+                    className="w-10 h-10 rounded-full"
+                    src={`http://localhost:8080${user?.PersonalInfo.PfpPath}`}
                     alt="User profile"
                   />
                 </button>
@@ -39,14 +39,14 @@ export default function Navbar() {
                     aria-labelledby="user-menu-button"
                   >
                     <div className="px-4 py-3">
-                      <span className="block text-base text-accent font-semibold">{user?.PersonalInfo.Fullname}</span>
-                      <span className="block text-xs text-text truncate">{user?.Email}</span>
+                      <span className="block text-lg text-accent font-semibold">{user?.PersonalInfo.Fullname}</span>
+                      <span className="block text-xs text-text/50 truncate ">{user?.Email}</span>
                     </div>
                     <ul className="py-2" role="none">
                       <li>
                         <NavLink
                           to="/user/edit"
-                          className="block px-4 py-2 text-sm text-text hover:bg-accent/70"
+                          className="block px-4 py-2 text-sm text-text hover:bg-secondary"
                           role="menuitem"
                         >
                           Edit Profile
@@ -55,7 +55,7 @@ export default function Navbar() {
                       <li>
                         <button
                           onClick={logout}
-                          className="block w-full text-left px-4 py-2 text-sm text-text hover:bg-accent/70"
+                          className="block w-full text-left px-4 py-2 text-sm text-text hover:bg-secondary"
                           role="menuitem"
                         >
                           Logout

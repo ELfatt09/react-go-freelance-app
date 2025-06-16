@@ -73,12 +73,12 @@ func GetAuthenticatedUserDataService(tokenString string) (models.User, error) {
 	}
 
 	var user models.User
-	initializers.DB.Preload("Job").Preload("PersonalInfo").First(&user, "id = ?", claim["sub"])
+	initializers.DB.Preload("PersonalInfo").First(&user, "id = ?", claim["sub"])
 
 	return user, nil
 }
 
-func EditUserInfoService(tokenString, fullname, Address, Phone, Gender, description, pfpPath string, jobID *uint) (models.User, error) {
+func EditUserInfoService(tokenString, fullname, SubTitle, Address, Phone, Gender, description string) (models.User, error) {
 	claim, err := utils.ParseToken(tokenString)
 	if err != nil {
 		return models.User{}, errors.New("token not valid")
@@ -94,14 +94,11 @@ func EditUserInfoService(tokenString, fullname, Address, Phone, Gender, descript
 	}
 
 	userPersonalInfo.Fullname = fullname
+	userPersonalInfo.SubTitle = SubTitle
 	userPersonalInfo.Address = Address
 	userPersonalInfo.Phone = Phone
 	userPersonalInfo.Gender = Gender
 	userPersonalInfo.Description = description
-	userPersonalInfo.PfpPath = pfpPath
-
-
-	user.JobID = jobID
 
 // Baru update data user
 
@@ -124,8 +121,8 @@ func EditUserPfpService(tokenString string, pfpImage *multipart.FileHeader) erro
 		return errors.New("token not valid")
 	}
 
-	var user models.User
-	if err := initializers.DB.Preload("PersonalInfo").First(&user, "id = ?", claim["sub"]).Error; err != nil {
+	var userPersonalInfo models.UserPersonalInfo
+	if err := initializers.DB.First(&userPersonalInfo, "user_id = ?", claim["sub"]).Error; err != nil {
 		return errors.New("user not found")
 	}
 
@@ -147,14 +144,14 @@ func EditUserPfpService(tokenString string, pfpImage *multipart.FileHeader) erro
 		return errors.New("failed to save profile picture")
 	}
 
-	if user.PersonalInfo.PfpPath != "" {
-		if err := os.Remove("." + user.PersonalInfo.PfpPath); err != nil {
+	if userPersonalInfo.PfpPath != "" && userPersonalInfo.PfpPath != "/" + newFileName {
+		if err := os.Remove("." + userPersonalInfo.PfpPath); err != nil {
 			return errors.New("failed to delete old profile picture")
 		}
 	}
 
-	user.PersonalInfo.PfpPath = "/" + destination
-	if err := initializers.DB.Save(&user.PersonalInfo).Error; err != nil {
+	userPersonalInfo.PfpPath = "/" + destination
+	if err := initializers.DB.Save(&userPersonalInfo).Error; err != nil {
 		return errors.New("failed to update user profile picture path")
 	}
 

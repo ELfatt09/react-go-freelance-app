@@ -28,7 +28,7 @@ services:
     image: mariadb:latest
     environment:
       MYSQL_ROOT_PASSWORD: fata8712
-      MYSQL_DATABASE: freelance_app
+      MYSQL_DATABASE: zilium
     volumes:
       - mariadb-data:/var/lib/mysql
     ports:
